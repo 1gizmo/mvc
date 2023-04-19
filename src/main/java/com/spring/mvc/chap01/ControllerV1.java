@@ -2,9 +2,7 @@ package com.spring.mvc.chap01;
 
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -79,4 +77,21 @@ public class ControllerV1 {
         System.out.println("bNo = " + bNo);
         return "";
     }
+
+    // 400대 에러 클라이언트 잘못
+    // 500대 에러 서버 잘못
+
+    // 음식 선택 요청처리
+//    @RequestMapping(value = "/food-select" , method = RequestMethod.POST)
+    // value 와 method 설정으로 Post 방식이 아니면 처리하지 않도록 설정
+    @PostMapping("/food-select") // 위에 긴 설정보다 간단하게 설정가능
+    public String foodSelect(
+            String foodName,
+            String category
+    ) {
+        System.out.println("foodName = " + foodName);
+        System.out.println("category = " + category);
+        return "";
+    }
+
 }
