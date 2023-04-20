@@ -105,9 +105,10 @@ public class ScoreController {
     }
     // 수정
     @GetMapping("/modify")
-    public String modify(Score score){
+    public String modify(Score score, Model model){
 
-        repository.change(score);
+        String ch = repository.change(score);
+        model.addAttribute("s", ch);
 
 
         return "chap04/score-modify";

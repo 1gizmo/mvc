@@ -97,6 +97,6 @@ public class ScoreRepositoryImpl implements ScoreRepository {
             return null;
         score.setKor(score.getKor());
 
-            return ;
+            return null;
     }
 }

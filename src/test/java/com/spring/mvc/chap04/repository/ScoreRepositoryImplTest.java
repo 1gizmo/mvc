@@ -31,7 +31,7 @@ class ScoreRepositoryImplTest {
         // given - when - then 패턴
         // given : 테스트를 위해 주어질 데이터 ( ex : parameter
         // when : 테스트 실제 상황
-        List<Score> scoreList = repository.findALl()
+        List<Score> scoreList = repository.findAll()
                 .stream()
                 .sorted(comparing((Score s) -> s.getStuNum()))
                         .collect(toList())
@@ -103,7 +103,7 @@ class ScoreRepositoryImplTest {
         score.setStuNum(4);
         // when
         boolean flag = repository.save(score);
-        List<Score> scoreList = repository.findALl();
+        List<Score> scoreList = repository.findAll();
         // then
         assertEquals(4, scoreList.size());
         assertTrue(flag);
