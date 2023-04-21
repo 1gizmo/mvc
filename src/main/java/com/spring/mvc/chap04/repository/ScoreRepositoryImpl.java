@@ -89,12 +89,5 @@ public class ScoreRepositoryImpl implements ScoreRepository {
         return scoreMap.get(stuNum);
     }
 
-    @Override
-    public String change(Score score) {
-        if(scoreMap.containsKey(score.getStuNum()))
-            return null;
-        score.setKor(score.getKor());
 
-            return null;
-    }
 }

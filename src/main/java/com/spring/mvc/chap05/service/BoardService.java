@@ -1,0 +1,44 @@
+package com.spring.mvc.chap05.service;
+
+import com.spring.mvc.chap05.dto.BoardListResponseDTO;
+import com.spring.mvc.chap05.dto.BoardWriteRequestDTO;
+import com.spring.mvc.chap05.entity.Board;
+import com.spring.mvc.chap05.repository.BoardRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
+
+@Service
+@RequiredArgsConstructor
+public class BoardService {
+
+    private final BoardRepository boardRepository;
+
+    // 중간처리 기능 자유롭게 사용
+    // 목록 중간처리
+    public List<BoardListResponseDTO> getList() {
+
+        return boardRepository.findAll()
+                .stream()
+                .map(BoardListResponseDTO::new)
+                .collect(toList())
+                ;
+    }
+
+    // 글 등록 중간처리
+    public boolean register(BoardWriteRequestDTO dto) {
+        return boardRepository.save(new Board(dto));
+    }
+
+    // 글 삭제 중간처리
+    public boolean delete(int boardStuNum){
+        return boardRepository.deleteByNo(boardStuNum);
+    }
+    // 상세조회
+    public Board retrieve(int stuNum){
+        return boardRepository.findOne(stuNum);
+    }
+}

@@ -3,48 +3,44 @@ package com.spring.mvc.chap04.controller;
 import com.spring.mvc.chap04.dto.ScoreListResponseDTO;
 import com.spring.mvc.chap04.dto.ScoreRequestDTO;
 import com.spring.mvc.chap04.entity.Score;
-import com.spring.mvc.chap04.repository.ScoreRepository;
+import com.spring.mvc.chap04.service.ScoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /*
- * 요청 URL
- * 1. 학생 성적정보 등록 및 조회 처리
- * - /socre/List : GET (조회 )
- *
- * 2. 성적 정보 처리 요청
- * - /score/register : POST
- *
- * 3. 성적정보 삭제 요청
- * - /score/remove : POST
- *
- * 4. 성적정보 상제 조회 요청
- * - /score/detail : GET
- *
+    # 요청 URL
+    1. 학생 성적정보 등록화면을 보여주고 및 성적정보 목록조회 처리
+    - /score/list : GET
+
+    2. 성적 정보 등록 처리 요청
+    - /score/register : POST
+
+    3. 성적정보 삭제 요청
+    - /score/remove : POST
+
+    4. 성적정보 상세 조회 요청
+    - /score/detail : GET
  */
 @Controller
 @RequestMapping("/score")
-//@AllArgsConstructor    //  : 모든 필드를 초기화 하는 생성자
-@RequiredArgsConstructor // : final 필드만 초기화하는 생성자
+//@AllArgsConstructor : 모든 필드를 초기화하는 생성자
+@RequiredArgsConstructor // : final필드만 초기화하는 생성자
 public class ScoreController {
 
-    // 저장소에 의존해야 데이터를 받아서 클리언트에게 응답할 수 있음
-    // 1번 리스트 목록 보여주기 위해서 목록 가져오기
-    private final ScoreRepository repository;
+    // 저장소에 의존해야 데이터를 받아서 클라이언트에게 응답할 수 있음
+//    private final ScoreRepository repository;
+    private final ScoreService scoreService;
 
-    // 만약에 클래스의 생성자가 단 1개라면 자동으로 @Autowired를  써줌
+    // 만약에 클래스의 생성자가 단 1개라면
+    // 자동으로 @Autowired를 써줌
 
-
-    // 주입 객체 불변성을 위해 final
-    // @AllArgs
 //    @Autowired
 //    public ScoreController(ScoreRepository repository) {
 //        this.repository = repository;
@@ -52,100 +48,86 @@ public class ScoreController {
 
     // 1. 성적등록화면 띄우기 + 정보목록조회
     @GetMapping("/list")
-    public String list(Model model, String sort) {
-        System.out.println("/score/List : GET ! ");
-        List<Score> scoreList = repository.findAll();
+    public String list(Model model,
+                      @RequestParam(defaultValue = "num") String sort) {
+        System.out.println("/score/list : GET!");
+        System.out.println("정렬 요구사항: " + sort);
 
-        // socoreList에서 원하는 정보만 추출하고 이름을 마스킹해서
-        // 다시 dto 리스트로 변환해줘야한다
-        scoreList.stream()
-                .map(ScoreListResponseDTO::new)
-                .collect(Collectors.toList());
+        List<ScoreListResponseDTO> responseDTOList
+                = scoreService.getList(sort);
 
+//        List<ScoreListResponseDTO> responseDTOList = new ArrayList<>();
+//        for (Score s : scoreList) {
+//            ScoreListResponseDTO dto = new ScoreListResponseDTO(s);
+//            responseDTOList.add(dto);
+//        }
 
-
-        List<ScoreListResponseDTO> responseDTOList = new ArrayList<>();
-
-
-
-        model.addAttribute("sList", scoreList);
-
+        model.addAttribute("sList", responseDTOList);
 
         return "chap04/score-list";
     }
-
-
-
-
-
-    // 2. 성적 정보 처리요청
+    // 2. 성적 정보 등록 처리 요청
     @PostMapping("/register")
     public String register(ScoreRequestDTO dto) {
 
-        // 입력데이터 ( 쿼리스트링 ) 읽기
-        System.out.println("/score/register : POST ! " + dto);
-        // dto(ScoreDTO)를 entity(Score)로 변환해야 함.
-        Score score = new Score(dto);
+        // 입력데이터(쿼리스트링) 읽기
+        System.out.println("/score/register : POST! - " + dto);
 
-        // save 명령
-        repository.save(score);
+        scoreService.insertScore(dto);
+
         /*
-         *  등록 요청에서 JSP 뷰 포워딩을 하면 갱신된 목록을
-         *  다시한번 저장소에서 불러와 모델에 담는 추가적인 코드가 필요하지만
-         *  리다이렉트를 통해서 위에서 만든 /score/lIst : GET 요청을
-         *  다시 자동으로 보낼 수 있다면 번거로운 코드가 줄어들 수 있겠다
-         */
+            등록요청에서 JSP 뷰 포워딩을 하면
+            갱신된 목록을 다시한번 저장소에서 불러와
+            모델에 담는 추가적인 코드가 필요하지만
 
+            리다이렉트를 통해서 위에서 만든 /score/list :GET
+            을 자동으로 다시 보낼 수 있다면 번거로운 코드가
+            줄어들 수 있겠다.
+         */
         return "redirect:/score/list";
     }
-
     // 3. 성적정보 삭제 요청
     @GetMapping("/remove")
     public String remove(int stuNum) {
-        System.out.println("/score/remove GET ! ");
+        System.out.println("/score/remove : GET!");
 
-        repository.deleteByStuNum(stuNum);
+        scoreService.delete(stuNum);
 
         return "redirect:/score/list";
     }
-
     // 4. 성적정보 상세 조회 요청
     @GetMapping("/detail")
     public String detail(int stuNum, Model model) {
-//        repository.findByStuNum(stuNum);
-
-        System.out.println("/score/detail : GET !");
-
-        extracted(stuNum, model);
-
+        System.out.println("/score/detail : GET!");
+        retrieve(stuNum, model);
         return "chap04/score-detail";
     }
 
 
-    private void extracted(int stuNum, Model model) {
-        Score score = repository.findByStuNum(stuNum);
-        model.addAttribute("s", score);
-    }
-
-    // 수정화면 열어주기
+    // 5. 수정 화면 열어주기
     @GetMapping("/modify")
-    public String modify(int stuNum, Model model){
-
-        extracted(stuNum, model);
-
+    public String modify(int stuNum, Model model) {
+        System.out.println("/score/modify : GET!");
+        retrieve(stuNum, model);
         return "chap04/score-modify";
     }
 
-    // 수정 완료
-    @PostMapping("/modify")
-    public String change(int stuNum, ScoreRequestDTO dto){
+    private void retrieve(int stuNum, Model model) {
+        Score score = scoreService.retrieve(stuNum);
+        model.addAttribute("s", score);
+    }
 
-        Score score = repository.findByStuNum(stuNum);
+    // 6. 수정 완료 처리하기
+    @PostMapping("/modify")
+    public String modify(int stuNum, ScoreRequestDTO dto) {
+        System.out.println("/score/modify : POST!");
+
+        Score score = scoreService.retrieve(stuNum);
         score.changeScore(dto);
 
-//        extracted(stuNum, model);
-
-        return "redirect:/score/detail?stuNum=" + stuNum;
+        return "redirect:/score/detail?stuNum=" + stuNum; // 상세보기페이지로 리다이렉트
     }
+
+
 
 }
