@@ -31,7 +31,7 @@
             <button class="add-btn">새 글 쓰기</button>
         </div>
 
-        <div class="card-container">
+        <div class="card-container" data-stu="/board/detail?stuNum=${s.stuNum}">
 
             <c:forEach var="b" items="${bList}">
                 <div class="card-wrapper">
@@ -115,8 +115,8 @@
         document.querySelector('.add-btn').onclick = e => {
             window.location.href = '/board/write';
         };
-        document.querySelector('.card-wrapper').onclick = e => {
-            window.location.href = '/board/detail';
+        document.querySelector('.card-container').onclick = e => {
+            window.location.href = '/board/detail'
         }
 
     </script>
