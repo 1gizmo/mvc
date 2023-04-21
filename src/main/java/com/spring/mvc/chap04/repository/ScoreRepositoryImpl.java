@@ -1,8 +1,7 @@
 package com.spring.mvc.chap04.repository;
 
-import com.spring.mvc.chap04.DTO.ScoreRequestDTO;
+import com.spring.mvc.chap04.dto.ScoreRequestDTO;
 import com.spring.mvc.chap04.entity.Score;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.Comparator;
@@ -10,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.spring.mvc.chap04.entity.Grade.A;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 

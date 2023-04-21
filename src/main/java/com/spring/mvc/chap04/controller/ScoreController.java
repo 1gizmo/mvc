@@ -1,19 +1,19 @@
 package com.spring.mvc.chap04.controller;
 
-import com.spring.mvc.chap04.DTO.ScoreRequestDTO;
+import com.spring.mvc.chap04.dto.ScoreListResponseDTO;
+import com.spring.mvc.chap04.dto.ScoreRequestDTO;
 import com.spring.mvc.chap04.entity.Score;
 import com.spring.mvc.chap04.repository.ScoreRepository;
-import com.spring.mvc.chap04.repository.ScoreRepositoryImpl;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /*
  * 요청 URL
@@ -55,9 +55,27 @@ public class ScoreController {
     public String list(Model model, String sort) {
         System.out.println("/score/List : GET ! ");
         List<Score> scoreList = repository.findAll();
+
+        // socoreList에서 원하는 정보만 추출하고 이름을 마스킹해서
+        // 다시 dto 리스트로 변환해줘야한다
+        scoreList.stream()
+                .map(ScoreListResponseDTO::new)
+                .collect(Collectors.toList());
+
+
+
+        List<ScoreListResponseDTO> responseDTOList = new ArrayList<>();
+
+
+
         model.addAttribute("sList", scoreList);
+
+
         return "chap04/score-list";
     }
+
+
+
 
 
     // 2. 성적 정보 처리요청
@@ -98,30 +116,36 @@ public class ScoreController {
 
         System.out.println("/score/detail : GET !");
 
-        Score score = repository.findByStuNum(stuNum);
-        model.addAttribute("s", score);
+        extracted(stuNum, model);
 
         return "chap04/score-detail";
     }
-    // 수정
+
+
+    private void extracted(int stuNum, Model model) {
+        Score score = repository.findByStuNum(stuNum);
+        model.addAttribute("s", score);
+    }
+
+    // 수정화면 열어주기
     @GetMapping("/modify")
-    public String modify(Score score, Model model){
+    public String modify(int stuNum, Model model){
 
-        String ch = repository.change(score);
-        model.addAttribute("s", ch);
-
+        extracted(stuNum, model);
 
         return "chap04/score-modify";
     }
 
-    @PostMapping("/change")
-    public String change(Score score, Model model){
+    // 수정 완료
+    @PostMapping("/modify")
+    public String change(int stuNum, ScoreRequestDTO dto){
 
-        String ch = repository.change(score);
+        Score score = repository.findByStuNum(stuNum);
+        score.changeScore(dto);
 
-        model.addAttribute("s", ch);
+//        extracted(stuNum, model);
 
-        return "redirect:/score/detail";
+        return "redirect:/score/detail?stuNum=" + stuNum;
     }
 
 }

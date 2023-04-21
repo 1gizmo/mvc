@@ -1,4 +1,4 @@
-package com.spring.mvc.chap04.DTO;
+package com.spring.mvc.chap04.dto;
 
 import lombok.*;
 
