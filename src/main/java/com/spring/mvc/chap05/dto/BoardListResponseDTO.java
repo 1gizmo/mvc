@@ -23,11 +23,11 @@ public class BoardListResponseDTO {
         this.boardNo = board.getBoardNo();
         this.shortTitle = makeShortTitle(board.getTitle());
         this.shortContent = makeShortContent(board.getContent());
-        this.date = makePrettierDateString(board.getRegDateTime());
-        this.viewCount = board.getViewCount();
+        this.date = makePrettierDateString(board.getRegdatetime());
+        this.viewCount = board.getViewcount();
     }
 
-    private String makePrettierDateString(LocalDateTime regDateTime) {
+    static String makePrettierDateString(LocalDateTime regDateTime) {
         DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return pattern.format(regDateTime);
     }

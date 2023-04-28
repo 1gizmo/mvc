@@ -59,7 +59,7 @@ public class PersonSpringRepository {
 
     // 개별조회
     public Person findOne(long id){
-        String sql = "SELECT * FROM person WHERE 1d=?";
+        String sql = "SELECT * FROM person WHERE id=?";
         return jdbcTemplate.queryForObject(sql, (rs, n) -> new Person(rs), id);
     }
 
