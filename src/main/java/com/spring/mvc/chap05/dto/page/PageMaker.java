@@ -23,6 +23,13 @@ public class PageMaker {
     // 이전 , 다음 버튼 활성화 여부
     private boolean prev, next;
 
+    public PageMaker(Page page, int totalCount) {
+        this.page = page;
+        this.totalCount = totalCount;
+        makePageInfo();
+    }
+
+
     // 페이지 계산 알고리즘
     private void makePageInfo(){
 
@@ -61,9 +68,4 @@ public class PageMaker {
 
     }
 
-    public PageMaker(Page page, int totalCount) {
-        this.page = page;
-        this.totalCount = totalCount;
-        makePageInfo();
-    }
 }
