@@ -7,21 +7,22 @@ import lombok.ToString;
 public class PageMaker {
 
     // 한번에 그려낼 페이지 수
-    // 1 ~ 5 , 6 ~ 10  v
-    // 1 ~ 10 , 11 ~ 20
+    // 1 ~ 5, 6 ~ 10
+    // 1 ~ 10, 11 ~ 20
     private static final int PAGE_COUNT = 5;
 
     // 화면 렌더링시 페이지의 시작값과 끝값
-    private int begin , end ;
+    private int begin, end, finalPage;
+
+    // 이전, 다음 버튼 활성화 여부
+    private boolean prev, next;
 
     // 현재 요청 페이지 정보
     private Page page;
 
-    //총 게시물 수
+    // 총 게시물 수
     private int totalCount;
 
-    // 이전 , 다음 버튼 활성화 여부
-    private boolean prev, next;
 
     public PageMaker(Page page, int totalCount) {
         this.page = page;
@@ -29,16 +30,15 @@ public class PageMaker {
         makePageInfo();
     }
 
-
     // 페이지 계산 알고리즘
-    private void makePageInfo(){
+    private void makePageInfo() {
 
-        // 1. end 값 계산
+        // 1. end값 계산
         // 올림처리 (현재 위치한 페이지번호 / 한 화면에 배치할 페이지수 ) *  한 화면에 배치할 페이지 수
-        this.end = (int) Math.ceil(page.getPageNo() / (double) PAGE_COUNT) * PAGE_COUNT;
+        this.end = (int) Math.ceil(page.getPageNo() / (double)PAGE_COUNT) * PAGE_COUNT;
 
-        // 2. begin 값 계산
-        this.begin = this.end - PAGE_COUNT + 1 ;
+        // 2. begin값 계산
+        this.begin = this.end - PAGE_COUNT + 1;
 
         /*
 
@@ -55,16 +55,16 @@ public class PageMaker {
           올림처리(총 게시물 수 / 한 페이지당 배치할 게시물 수)
 
          */
-        int realEnd = (int) Math.ceil((double)totalCount / page.getAmount());
+        this.finalPage = (int) Math.ceil((double)totalCount / page.getAmount());
 
-        // 마지막 페이지 구간에서만 앤드보정이 일어나야 함
-        if( realEnd < this.end) this.end = realEnd;
+        // 마지막 페이지 구간에서만 엔드보정이 일어나야 함
+        if (this.finalPage < this.end) this.end = this.finalPage;
 
         // 이전 버튼 활성화 여부
         this.prev = begin > 1;
 
         // 다음 버튼 활성화 여부
-        this.next = end < realEnd;
+        this.next = end < this.finalPage;
 
     }
 
