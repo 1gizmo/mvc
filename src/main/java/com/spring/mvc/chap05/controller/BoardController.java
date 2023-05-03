@@ -75,4 +75,5 @@ public class BoardController {
         return "chap05/detail";
     }
 
+
 }
