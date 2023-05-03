@@ -48,7 +48,17 @@ class ReplyMapperTest {
 //        }
 //
 //    }
-
+//    @Test
+//    void bulkReplyInsert() {
+//        for (int i = 0; i < 300 ; i++) {
+//            Reply reply = Reply.builder()
+//                    .replyText("하하호호히히" + i)
+//                    .replyWriter("하하마녀")
+//                    .boardNo(298L)
+//                    .build();
+//            replyMapper.save(reply);
+//        }
+//    }
 
     @Test
     @DisplayName("댓글을 3번 게시물에 등록하면 " +
