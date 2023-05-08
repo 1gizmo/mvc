@@ -15,3 +15,6 @@
 
 
 <link rel="stylesheet" href="/assets/css/main.css">
+
+<!-- side menu event js-->
+<script src="/assets/js/side-menu.js" defer></script>
