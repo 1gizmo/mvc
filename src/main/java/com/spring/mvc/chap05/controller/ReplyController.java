@@ -2,6 +2,7 @@ package com.spring.mvc.chap05.controller;
 
 import com.spring.mvc.chap05.dto.ReplyDetailResponseDTO;
 import com.spring.mvc.chap05.dto.ReplyListResponseDTO;
+import com.spring.mvc.chap05.dto.ReplyModifyRequestDTO;
 import com.spring.mvc.chap05.dto.ReplyPostRequestDTO;
 import com.spring.mvc.chap05.dto.page.Page;
 import com.spring.mvc.chap05.entity.Reply;
@@ -22,6 +23,8 @@ import static org.springframework.http.ResponseEntity.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/replies")
 @Slf4j
+//클라이언트의 접근을 어떤 app에서만 허용할 것인가
+@CrossOrigin(origins = {"http://127.0.0.1:5501"})
 public class ReplyController {
 
     private final ReplyService replyService;
@@ -74,7 +77,49 @@ public class ReplyController {
 
     }
 
+    //댓글 삭제 요청
+    @DeleteMapping("/{replyNo}")
+    public ResponseEntity<?> remove(
+           @PathVariable(required = false) Long replyNo
+    ) {
+        if(replyNo == null){
+            return ResponseEntity.badRequest().body("댓글 번호를 보내줘 제발 !!!!!! ");
+        }
+        log.info("/api/v1/replies/{} DELETE ! ", replyNo);
+        try {
+            ReplyListResponseDTO delete = replyService.delete(replyNo);
+            return ResponseEntity
+                    .ok()
+                    .body(delete);
+        } catch (Exception e) {
+            return ResponseEntity
+                    .internalServerError()
+                    .body(e.getMessage());
+        }
+    }
 
+    // 댓글 수정 요청
+    @RequestMapping(method = {RequestMethod.PUT, RequestMethod.PATCH})
+    public ResponseEntity<?> modify(
+            @Validated @RequestBody ReplyModifyRequestDTO dto
+            , BindingResult result
+    ) {
+
+        if (result.hasErrors()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(result.toString());
+        }
+
+        log.info("/api/v1/replies PUT!");
+        try {
+            ReplyListResponseDTO responseDTO = replyService.modify(dto);
+            return ResponseEntity.ok().body(responseDTO);
+        } catch (Exception e) {
+            log.warn("500 status code! caused by: {}", e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
 
 
 }

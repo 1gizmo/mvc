@@ -2,6 +2,7 @@ package com.spring.mvc.chap05.service;
 
 import com.spring.mvc.chap05.dto.ReplyDetailResponseDTO;
 import com.spring.mvc.chap05.dto.ReplyListResponseDTO;
+import com.spring.mvc.chap05.dto.ReplyModifyRequestDTO;
 import com.spring.mvc.chap05.dto.ReplyPostRequestDTO;
 import com.spring.mvc.chap05.dto.page.Page;
 import com.spring.mvc.chap05.dto.page.PageMaker;
@@ -10,6 +11,7 @@ import com.spring.mvc.chap05.repository.ReplyMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -53,8 +55,29 @@ public class ReplyService {
         return getList(dto.getBno(), new Page(1, 10));
     }
 
+    // 댓글 삭제 서비스
+    @Transactional // 트랙잭션 처리
+    public ReplyListResponseDTO delete(final long replyNo) throws Exception {
 
+        long boardNo = replyMapper.findOne(replyNo).getBoardNo();
+//        log.info("bn: {}",boardNo);
+        replyMapper.deleteOne(replyNo);
 
+        return getList(boardNo,
+                new Page(1, 10));
+    }
 
+    // 댓글 수정 요청
+//    @PutMapping("/{replyNo}")
+    // 댓글 수정 서비스
+    @Transactional
+    public ReplyListResponseDTO modify(final ReplyModifyRequestDTO dto)
+            throws Exception {
 
+        replyMapper.modify(dto.toEntity());
+        return getList(
+                dto.getBno()
+                , new Page(1, 10)
+        );
+    }
 }
