@@ -31,15 +31,22 @@ public class BoardController {
     @GetMapping("/list")
     public String list(Search page, Model model
                     ,HttpServletRequest request) {
-        // 쿠키 확인
         boolean flag = false;
-        Cookie[] cookies = request.getCookies();
-        for (Cookie c : cookies) {
-            if(c.getName().equals("login")){
-                flag = true;
-                break;
-            }
-        }
+        // 세션 확인
+        Object login = request.getSession().getAttribute("login");
+
+        if(login != null) flag = true;
+
+
+
+        // 쿠키 확인
+//        Cookie[] cookies = request.getCookies();
+//        for (Cookie c : cookies) {
+//            if(c.getName().equals("login")){
+//                flag = true;
+//                break;
+//            }
+//        }
         if(!flag) return "redirect:/members/sign-in";
 
         log.info("/board/list : GET");
@@ -86,7 +93,8 @@ public class BoardController {
     public String detail(int bno, @ModelAttribute("s") Search search, Model model) {
         System.out.println("/board/detail : GET");
         model.addAttribute("b", boardService.getDetail(bno));
-//        model.addAttribute("s",search);
+        model.addAttribute("s",search);
+
         return "chap05/detail";
     }
 

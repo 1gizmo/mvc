@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import static com.spring.mvc.chap05.service.LoginResult.*;
 
@@ -62,8 +64,13 @@ public class MembersController {
 
     // 로그인 양식 요청
     @GetMapping("/sign-in")
-    public String signIn(){
+    public String signIn(HttpServletRequest request){
         log.info("/members/sign-in GET ! - {}" );
+        // 요청 정보 헤더안에선 Referer라는키가 잇는데
+        // 여기 값은 이페이지로 들어올때 어디ㅅ에서 왔는지에 대한
+        // URI 정보가 기록되어 있음
+        String referer = request.getHeader("Referer");
+        log.info("referer: {}", referer);
 
         return "members/sign-in";
     }
@@ -72,20 +79,29 @@ public class MembersController {
     public String signIn(LoginRequestDTO dto,
 //                       리다이렉션시 2번째 응답에 데이터를 보내기 위함
                          RedirectAttributes ra
-                        , HttpServletResponse response){
+                        , HttpServletResponse response
+                        , HttpServletRequest request){
         log.info("/members/sign-in POST", dto);
 
         LoginResult result = memberService.authenticate(dto);
 
         // 로그인 성공시
         if (result == SUCCESS) {
-         // 쿠키 만들기
-            Cookie loginCookie = new Cookie("login","홍길동");
-            // 쿠키 셋팅
-            loginCookie.setPath("/");
-            loginCookie.setMaxAge(60 * 60 * 24);
-            // 쿠키를 응답시에 실어서 클라이언트에게 전송
-            response.addCookie(loginCookie);
+            // 서버에서 세션에 로그인 정보를 저장
+            memberService.mainloginState(request.getSession(),dto.getAccount());
+
+
+
+
+//         // 쿠키 만들기
+//            Cookie loginCookie = new Cookie("login","홍길동");
+//            // 쿠키 셋팅
+//            loginCookie.setPath("/");
+//            loginCookie.setMaxAge(60 * 60 * 24);
+//            // 쿠키를 응답시에 실어서 클라이언트에게 전송
+//            response.addCookie(loginCookie);
+
+
 
             return "redirect:/";
         }
@@ -94,6 +110,20 @@ public class MembersController {
         ra.addFlashAttribute("msg",result);
         // 로그인 실패시
         return "redirect:/members/sign-in";
-
     }
+    // 로그아웃 요청
+    @GetMapping("/sign-out")
+    public String  signOut(HttpSession session){
+        // 세션에서 로그인 정보를 제거
+        session.removeAttribute("login");
+
+        // 세션을 아에 초기화 (세션만료 시간 )
+        session.invalidate();
+
+
+        return "redirect:/";
+    }
+
+
+
 }
