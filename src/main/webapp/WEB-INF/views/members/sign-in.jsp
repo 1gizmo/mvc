@@ -104,4 +104,18 @@
         </div>
     </div>
     
+    <script>
+        const serverMessge = '${msg}';
+        console.log('msg : ' + serverMessge);
+
+        if (serverMessge === 'NO_ACC') {
+            alert('회원가입부터 하세요 ~ ')
+        }else if (serverMessge === "NO_PW"){
+            alert('비밀번호가 틀렸어요 ~ ')
+        } else {
+            alert ('환영하오~')
+        }
+    </script>
+
+
 </body>
