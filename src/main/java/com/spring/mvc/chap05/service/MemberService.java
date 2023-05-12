@@ -86,7 +86,7 @@ public class MemberService {
                 .build();
 
         // 그 정보를 세션에 저장
-        session.setAttribute("login", dto);
+        session.setAttribute("Liginutil.LOGIN_KEY", dto);
 
         //세션의 수명을 설정
         session.setMaxInactiveInterval(60 * 60); // 1시간
