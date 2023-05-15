@@ -2,7 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,6 +11,8 @@
     <%@ include file="../include/static-head.jsp" %>
 
     <style>
+
+
         .form-container {
             width: 500px;
             margin: auto;
@@ -21,7 +22,6 @@
             border-radius: 4px;
             font-size: 18px;
         }
-
         .form-container h1 {
             font-size: 40px;
             font-weight: 700;
@@ -30,21 +30,18 @@
             margin-bottom: 20px;
             color: #ffffff;
         }
-
         .form-container h2 {
             font-size: 30px;
             color: #222;
             text-align: center;
             margin-bottom: 20px;
         }
-
         label {
             display: block;
             margin-bottom: 5px;
             font-size: 20px;
         }
-
-        #title {
+        #title, #writer {
             font-size: 18px;
             width: 100%;
             padding: 8px;
@@ -54,7 +51,6 @@
             margin-bottom: 10px;
             background-color: rgba(255, 255, 255, 0.8);
         }
-
         #content {
             height: 400px;
             font-size: 18px;
@@ -71,13 +67,11 @@
             resize: none;
             height: 200px;
         }
-
         .buttons {
             display: flex;
             justify-content: flex-end;
             margin-top: 20px;
         }
-
         button {
             font-size: 20px;
             padding: 10px 20px;
@@ -90,15 +84,12 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             transition: background-color 0.3s;
         }
-
         button.list-btn {
             background: #e61e8c;
         }
-
         button:hover {
             background-color: #3d8b40;
         }
-
         button.list-btn:hover {
             background: #e61e8c93;
         }
@@ -116,9 +107,9 @@
             background: #888 !important;
             color: #fff !important;
         }
+
     </style>
 </head>
-
 <body>
 
     <%@ include file="../include/header.jsp" %>
@@ -126,15 +117,16 @@
     <div id="wrap" class="form-container">
         <h1>${b.boardNo}번 게시물 내용~ </h1>
         <h2># 작성일자: ${b.date}</h2>
+
         <label for="writer">작성자</label>
-        <input type="text" id="title" name="title" value="${b.title}" readonly>
+        <input type="text" id="writer" name="writer" value="${b.writer}" readonly>
+
         <label for="title">제목</label>
         <input type="text" id="title" name="title" value="${b.title}" readonly>
         <label for="content">내용</label>
         <div id="content">${b.content}</div>
         <div class="buttons">
-            <button class="list-btn" type="button"
-                onclick="window.location.href='/board/list?pageNo=${s.pageNo}&type=${s.type}&keyword=${s.keyword}'">목록</button>
+            <button class="list-btn" type="button" onclick="window.location.href='/board/list?pageNo=${s.pageNo}&type=${s.type}&keyword=${s.keyword}'">목록</button>
         </div>
 
         <!-- 댓글 영역 -->
@@ -155,9 +147,11 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="newReplyWriter" hidden>댓글 작성자</label>
-                                    <input id="newReplyWriter" name="replyWriter" type="text" class="form-control"
-                                        placeholder="작성자 이름" style="margin-bottom: 6px;">
-                                    <button id="replyAddBtn" type="button" class="btn btn-dark form-control">등록</button>
+                                    <input id="newReplyWriter" name="replyWriter" type="text"
+                                         class="form-control" placeholder="작성자 이름"
+                                         style="margin-bottom: 6px;">
+                                    <button id="replyAddBtn" type="button"
+                                        class="btn btn-dark form-control">등록</button>
                                 </div>
                             </div>
                         </div>
@@ -174,15 +168,15 @@
                     <!-- 댓글 내용 바디 -->
                     <div id="replyCollapse" class="card">
                         <div id="replyData">
-                            <!-- 
-                            < JS로 댓글 정보 DIV삽입 > 
+                            <!--
+                            < JS로 댓글 정보 DIV삽입 >
                         -->
                         </div>
 
                         <!-- 댓글 페이징 영역 -->
                         <ul class="pagination justify-content-center">
-                            <!-- 
-                            < JS로 댓글 페이징 DIV삽입 > 
+                            <!--
+                            < JS로 댓글 페이징 DIV삽입 >
                         -->
                         </ul>
                     </div>
@@ -236,12 +230,7 @@
 
         // 페이지 렌더링 함수
         function renderPage({
-            begin,
-            end,
-            prev,
-            next,
-            page,
-            finalPage
+            begin, end, prev, next, page, finalPage
         }) {
 
             let tag = "";
@@ -297,9 +286,7 @@
 
         // 댓글 목록 렌더링 함수
         function renderReplyList({
-            count,
-            pageInfo,
-            replies
+            count, pageInfo, replies
         }) {
 
             // 총 댓글 수 렌더링
@@ -315,12 +302,7 @@
             } else {
                 for (let rep of replies) {
 
-                    const {
-                        rno,
-                        writer,
-                        text,
-                        regDate
-                    } = rep;
+                    const {rno, writer, text, regDate} = rep;
 
                     tag += "<div id='replyContent' class='card-body' data-replyId='" + rno + "'>" +
                         "    <div class='row user-block'>" +
@@ -335,9 +317,9 @@
                         "       <div et-md-2 col-md-4 text-right'>";
 
                     // if (currentAccount === rep.account || auth === 'ADMIN') {
-                    tag +=
-                        "         <a id='replyModBtn' class='btn btn-sm btn-outline-dark' data-bs-toggle='modal' data-bs-target='#replyModifyModal'>수정</a>&nbsp;" +
-                        "         <a id='replyDelBtn' class='btn btn-sm btn-outline-dark' href='#'>삭제</a>";
+                        tag +=
+                            "         <a id='replyModBtn' class='btn btn-sm btn-outline-dark' data-bs-toggle='modal' data-bs-target='#replyModifyModal'>수정</a>&nbsp;" +
+                            "         <a id='replyDelBtn' class='btn btn-sm btn-outline-dark' href='#'>삭제</a>";
                     // }
                     tag += "       </div>" +
                         "    </div>" +
@@ -355,8 +337,8 @@
         }
 
 
-        // 댓글 목록 불러오기 함수 
-        function getReplyList(page = 1) {
+        // 댓글 목록 불러오기 함수
+        function getReplyList(page=1) {
 
             fetch(`\${URL}/\${bno}/page/\${page}`)
                 .then(res => res.json())
@@ -365,36 +347,46 @@
                     renderReplyList(responseResult);
                 });
         }
+
         // 댓글 등록 처리 이벤트 함수
-        function makePeplyRegisterClickEvent() {
+        function makeReplyRegisterClickEvent() {
+
             const $regBtn = document.getElementById('replyAddBtn');
-            const $rt = document.getElementById('newReplyWriter');
-            const $rw = document.getElementById('newReplyWriter');
+
             $regBtn.onclick = e => {
 
-                // 클라이언트 입력 값 검증
+                const $rt = document.getElementById('newReplyText');
+                const $rw = document.getElementById('newReplyWriter');
+
+                // console.log($rt.value);
+                // console.log($rw.value);
+
+
+                // 클라이언트 입력값 검증
                 if ($rt.value.trim() === '') {
-                    alert('댓글 내용은 필수입니다 ! ')
+                    alert('댓글 내용은 필수입니다!');
                     return;
-                } else if ($rw.vlaue.trim() === '') {
-                    alert('댓글 작성자 이름은 필수입니다 ! ')
+                }
+
+                else if ($rw.value.trim() === '') {
+                    alert('댓글 작성자 이름은 필수입니다!');
                     return;
-                } else if ($rw.value.trim().length < 2 || $rw.value.trim().length > 8) {
-                    alert('댓글 작성자 이름 2 ~ 8 글자 사이로 작성하세요')
+                }
+                else if ($rw.value.trim().length < 2 || $rw.value.trim().length > 8) {
+                    alert('댓글 작성자 이름은 2~8자 사이로 작성하세요!');
                     return;
                 }
 
 
-
-                //서버로 보낼 데이터
+                // # 서버로 보낼 데이터
                 const payload = {
                     text: $rt.value,
                     author: $rw.value,
                     bno: bno
                 };
 
-                // # GET 방식을 제외하고 필요한 객체
-                const requsetInfo = {
+                // # GET방식을 제외하고 필요한 객체
+                const requestInfo = {
                     method: 'POST',
                     headers: {
                         'content-type': 'application/json'
@@ -402,26 +394,23 @@
                     body: JSON.stringify(payload)
                 };
 
-                //  서버에 POST 요청 보내기
-                fetch(URL, requsetInfo)
+                // # 서버에 POST요청 보내기
+                fetch(URL, requestInfo)
                     .then(res => {
                         if (res.status === 200) {
-                            alert('댓글이 정상 등록됨 ! ');
+                            alert('댓글이 정상 등록됨!');
                             // 입력창 비우기
                             $rt.value = '';
                             $rw.value = '';
 
-                            // 마지막 페이지 번호
+                            // 마지막페이지 번호
                             const lastPageNo = document.querySelector('.pagination').dataset.fp;
                             getReplyList(lastPageNo);
                         } else {
-                            alert('댓글 등록에 실패함 ! ');
+                            alert('댓글 등록에 실패함!');
                         }
-                    })
-                //  
-
-
-            }
+                    });
+            };
         }
 
         // 댓글 삭제+수정모달 이벤트 처리 함수
@@ -432,6 +421,7 @@
             $replyData.onclick = e => {
 
                 e.preventDefault();
+
                 // 삭제할 댓글의 PK값 읽기
                 const rno = e.target.closest('#replyContent').dataset.replyid;
 
@@ -467,12 +457,14 @@
                     // 모달에 모달바디에 textarea에 읽은 텍스트를 삽입
                     document.getElementById('modReplyText').value = replyText;
 
-                    // 다음 수정완료 처리를 위해 미리 수정창을 띄울때 댓글번호도 모달에 붙이기
+                    // 다음 수정완료 처리를 위해 미리
+                    // 수정창을 띄울 때 댓글번호를 모달에 붙여놓자
                     const $modal = document.querySelector('.modal');
                     $modal.dataset.rno = rno;
                 }
             };
         }
+
         // 서버에 수정 비동기 요청 처리 함수
         function replyModifyClickEvent() {
 
@@ -497,6 +489,7 @@
                 }).then(res => {
                     if (res.status === 200) {
                         alert('댓글이 정상 수정되었습니다!');
+                        // 모달창 닫기
                         document.getElementById('modal-close').click();
                         return res.json();
                     } else {
@@ -510,7 +503,7 @@
 
 
         //========= 메인 실행부 =========//
-        (function () {
+        (function() {
 
             // 첫 댓글 페이지 불러오기
             getReplyList();
@@ -518,17 +511,18 @@
             // 페이지 버튼 이벤트 등록
             makePageButtonClickEvent();
 
-            //댓글 이벤트 등록
-            makePeplyRegisterClickEvent();
+            // 댓글 등록 이벤트 등록
+            makeReplyRegisterClickEvent();
 
             // 삭제 이벤트 등록
             replyRemoveClickEvent();
 
             // 수정 이벤트 등록
             replyModifyClickEvent();
+
         })();
+
     </script>
 
 </body>
-
 </html>

@@ -30,13 +30,13 @@
         <result property="personAge" column="person_age" />
     </resultMap>
 
-    <select id="findAll" resultType="score">
+    <select id="findAll" resultMap="person">
         SELECT * FROM person
     </select>
 
-    <select id="findOne" resultType="score">
+    <select id="findOne" resultMap="person">
         SELECT * FROM person
-        WHERE id = #{stuNum}
+        WHERE id = #{id}
     </select>
 
 </mapper>

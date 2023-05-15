@@ -1,11 +1,6 @@
 package com.spring.mvc.config;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import javax.sql.DataSource;
 
 @Configuration
 public class DatabaseConfig {
@@ -30,6 +25,10 @@ public class DatabaseConfig {
 //
 //        return new HikariDataSource(config);
 //    }
-
+//
+//    @Bean
+//    public JdbcTemplate jdbcTemplate() {
+//        return new JdbcTemplate(dataSource());
+//    }
 
 }

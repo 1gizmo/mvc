@@ -1,10 +1,10 @@
-package com.spring.mvc.chap05.dto;
+package com.spring.mvc.chap05.dto.response;
 
 import lombok.*;
 
 @Setter @Getter
-@NoArgsConstructor
 @ToString @EqualsAndHashCode
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class LoginUserResponseDTO {
@@ -12,5 +12,5 @@ public class LoginUserResponseDTO {
     private String account;
     private String nickName;
     private String email;
-
+    private String auth;
 }

@@ -49,7 +49,7 @@ public class BoardRepositoryImpl
     public boolean save(Board board) {
         board.setBoardNo(++sequence);
 
-        LocalDateTime regDateTime = board.getRegdatetime();
+        LocalDateTime regDateTime = board.getRegDateTime();
         Date ddd = Date.from(regDateTime.atZone(ZoneId.systemDefault()).toInstant());
         System.out.println("ddd = " + ddd);
 
