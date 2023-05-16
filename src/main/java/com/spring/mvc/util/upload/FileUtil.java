@@ -42,11 +42,17 @@ public class FileUtil {
         // 파일 업로드 수행
         try {
             file.transferTo(new File(newPath, newFileName));
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        // 저장한 파일의 풀 경로
+        String fullPath =  newPath +"/"+ newFileName;
 
-        return "";
+        // fullPath = d:/abc/upload/2023/05/16/disga.jpg
+        // rootPath = d:/abc/upload/
+
+        return fullPath.substring(rootPath.length() - 1);
     }
 
     /**
