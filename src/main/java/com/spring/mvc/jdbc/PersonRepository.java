@@ -36,8 +36,8 @@ public class PersonRepository {
 
             // SQL을 실행해주는 객체 얻기
             String sql = "INSERT INTO person " +
-                    "(person_name, person_age) " +
-                    "VALUES (?, ?)";
+                            "(person_name, person_age) " +
+                        "VALUES (?, ?)";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             // ?값 세팅하기
@@ -85,8 +85,8 @@ public class PersonRepository {
             conn.setAutoCommit(false); // 오토커밋 비활성화
 
             String sql = "UPDATE person " +
-                    "SET person_name=?, person_age=? " +
-                    "WHERE id=?";
+                        "SET person_name=?, person_age=? " +
+                        "WHERE id=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, person.getPersonName());
@@ -128,7 +128,7 @@ public class PersonRepository {
             conn.setAutoCommit(false); // 오토커밋 비활성화
 
             String sql = "DELETE FROM person " +
-                    "WHERE id=?";
+                            "WHERE id=?";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setLong(1, id);
@@ -158,35 +158,38 @@ public class PersonRepository {
         }
     }
 
-    // 사람 정보 전체조회
+    // 사람 정보 전체 조회
     public List<Person> findAll() {
         List<Person> people = new ArrayList<>();
-        try {
-            Connection conn = DriverManager.getConnection(url, username, password);
+        // try - with - resource  :  close 자동화 (AutoClosable)
+        try (Connection conn
+                     = DriverManager.getConnection(url, username, password)) {
 
             conn.setAutoCommit(false);
+
             String sql = "SELECT * FROM person";
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
-
             ResultSet rs = pstmt.executeQuery();
-            // 포인터 커서로 첫번째 행부터 next 호출시마다 매 다음 행을 지목
 
+            // 포인터 커서로 첫번째 행부터 next호출시마다 매 다음 행을 지목
             while (rs.next()) {
-            // 위치한 커서에서 데이터를 추출
-            long id = rs.getLong("id");
-            String name = rs.getString("person_name");
-            int age = rs.getInt("person_age");
+                // 위치한 커서에서 데이터 추출
+                long id = rs.getLong("id");
+                String name = rs.getString("person_name");
+                int age = rs.getInt("person_age");
 
-            Person p = new Person(id, name, age);
-            System.out.println("p = " + p);
+                Person p = new Person();
+                p.setId(id);
+                p.setPersonName(name);
+                p.setPersonAge(age);
+                people.add(p);
             }
 
-
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         return people;
     }
 
@@ -222,4 +225,5 @@ public class PersonRepository {
         }
         return null;
     }
+
 }

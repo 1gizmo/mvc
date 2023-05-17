@@ -2,6 +2,7 @@ package com.spring.mvc.interceptor;
 
 import com.spring.mvc.chap05.entity.Board;
 import com.spring.mvc.chap05.repository.BoardMapper;
+import com.spring.mvc.util.LoginUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;

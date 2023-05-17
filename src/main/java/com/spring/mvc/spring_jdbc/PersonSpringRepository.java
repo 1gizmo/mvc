@@ -1,5 +1,6 @@
 package com.spring.mvc.spring_jdbc;
 
+import com.spring.mvc.chap04.entity.Score;
 import com.spring.mvc.jdbc.Person;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,19 +15,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PersonSpringRepository {
 
-    // 스프링 JDBC 활용 - 데이버테이스 접속 설정 정보를
-    // 설정 파일을 통해 불러와서 사용합니다
+    // 스프링 JDBC 활용 - 데이터베이스 접속 설정 정보를
+    // 설정파일을 통해 불러와서 사용합니다.
     private final JdbcTemplate jdbcTemplate;
 
     // 저장 기능
     public void savePerson(Person p) {
-        String sql = "INSERT INTO person (person_name, person_age)" +
-                "VALUES (?, ?)";
-        jdbcTemplate.update(sql, p.getPersonName(), p.getPersonAge());
+        String sql = "INSERT INTO person " +
+                "(person_name, person_age) " +
+                " VALUES (?, ?)";
+        jdbcTemplate.update(sql,
+                p.getPersonName(), p.getPersonAge());
     }
 
-    // 삭제기능
-    public void removePerson(long id){
+    // 삭제 기능
+    public void removePerson(long id) {
         String sql = "DELETE FROM person WHERE id = ?";
         jdbcTemplate.update(sql, id);
     }
@@ -34,8 +37,8 @@ public class PersonSpringRepository {
     // 수정 기능
     public boolean modify(Person p) {
         String sql = "UPDATE person SET " +
-                "person_name=?, person_age=? " +
-                "WHERE id = ?";
+                    "person_name=?, person_age=? " +
+                    "WHERE id = ?";
         int result = jdbcTemplate.update(sql,
                 p.getPersonName(),
                 p.getPersonAge(),
@@ -43,26 +46,20 @@ public class PersonSpringRepository {
         return result == 1;
     }
 
-//     전체 조회 기능
+    // 전체 조회 기능
     public List<Person> findAll() {
         String sql = "SELECT * FROM person";
-     List<Person> personList = jdbcTemplate.query(sql, (RowMapper) (rs, rowNum) -> {
-         Person p = new Person(rs);
-//             p.setId(rs.getLong("id"));
-//             p.setPersonName(rs.getString("person_name"));
-//             p.setPersonAge(rs.getInt("person_age"));
-         return p;
-     });
-
-     return personList;
+        return jdbcTemplate.query(sql,
+                (rs,  rowNum) -> new Person(rs));
     }
 
-    // 개별조회
-    public Person findOne(long id){
+    // 개별 조회
+    public Person findOne(long id) {
         String sql = "SELECT * FROM person WHERE id=?";
-        return jdbcTemplate.queryForObject(sql, (rs, n) -> new Person(rs), id);
+        return jdbcTemplate.queryForObject(
+                sql,
+                (rs, n) -> new Person(rs)
+                , id);
     }
-
-
 
 }

@@ -20,20 +20,22 @@ public class CoffeeController {
         System.out.println("/coffee/order : GET 요청 발생!");
         return "chap03/coffee-form";
     }
-/*
-*  @request - /coffee/result : POST
-*  @response - /chap03/coffee-result.jsp
-*/
+
+
+    /*
+        @request - /coffee/result : POST
+        @response - /chap03/coffee-result.jsp
+     */
     @PostMapping("/result")
-    public String coffeeResult(String menu, @RequestParam(defaultValue = "3000")
-    int price, Model model) {
+    public String coffeeResult(String menu,
+                               @RequestParam(defaultValue = "3000") int price,
+                               Model model) {
         System.out.println("menu = " + menu);
         System.out.println("price = " + price);
 
         model.addAttribute("menu", menu);
         model.addAttribute("p", price);
-
-        return "/chap03/coffee-result";
+        return "chap03/coffee-result";
     }
 
 }

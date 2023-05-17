@@ -3,6 +3,7 @@ package com.spring.mvc.interceptor;
 import com.spring.mvc.chap05.entity.Member;
 import com.spring.mvc.chap05.repository.MemberMapper;
 import com.spring.mvc.chap05.service.MemberService;
+import com.spring.mvc.util.LoginUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -11,9 +12,10 @@ import org.springframework.web.util.WebUtils;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.time.LocalDateTime;
 
-import static com.spring.mvc.util.LoginUtil.AUTO_LOGIN_COOKIE;
+import static com.spring.mvc.util.LoginUtil.*;
 
 @Configuration
 @RequiredArgsConstructor

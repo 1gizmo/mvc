@@ -16,12 +16,12 @@ public class RestApiController {
 
     @GetMapping("/hello")
     public String hello() {
-        return "안녕하세요 !";
+        return "안녕하세요!";
     }
 
     @GetMapping("/foods")
     public List<String> foods() {
-//            String[] foodList = {"탕수육","족발","마라탕"};
+//        String[] foodList = {"탕수육", "족발", "마라탕"};
         List<String> foodList = List.of("탕수육", "족발", "마라탕");
         return foodList;
     }
@@ -31,12 +31,14 @@ public class RestApiController {
         Person p = new Person(1L, "루피", 3);
         return p;
     }
+
     @GetMapping("/person-list")
-    public ResponseEntity<List<Person>> personList() {
+    public ResponseEntity<?> personList() {
         Person p = new Person(1L, "루피", 3);
-        Person p2 = new Person(2L, "라피", 4);
-        Person p3 = new Person(3L, "로피", 5);
+        Person p2 = new Person(2L, "딸긔겅듀", 4);
+        Person p3 = new Person(3L, "뽀롤로", 5);
         List<Person> personList = List.of(p, p2, p3);
+
         return ResponseEntity.ok().body(personList);
     }
 
@@ -45,22 +47,19 @@ public class RestApiController {
             @RequestParam(required = false) Double cm,
             @RequestParam(required = false) Double kg) {
 
-        if(cm == null || kg == null){
-            return ResponseEntity.badRequest().build();
+        if (cm == null || kg == null) {
+            return ResponseEntity.badRequest().body("키랑 몸무게 보내 이새갸");
         }
 
         double bmi = kg / (cm / 100) * (cm / 100);
+
         HttpHeaders headers = new HttpHeaders();
         headers.add("fruits", "melon");
         headers.add("hobby", "soccer");
 
-
-
-        return ResponseEntity.ok()
+        return ResponseEntity
+                .ok()
                 .headers(headers)
                 .body(bmi);
     }
-
-
-
 }

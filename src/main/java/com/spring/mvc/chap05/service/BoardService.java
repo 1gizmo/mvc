@@ -1,14 +1,13 @@
 package com.spring.mvc.chap05.service;
 
-import com.spring.mvc.chap05.dto.page.Search;
-import com.spring.mvc.chap05.dto.request.BoardWriteRequestDTO;
 import com.spring.mvc.chap05.dto.response.BoardDetailResponseDTO;
 import com.spring.mvc.chap05.dto.response.BoardListResponseDTO;
+import com.spring.mvc.chap05.dto.request.BoardWriteRequestDTO;
+import com.spring.mvc.chap05.dto.page.Search;
 import com.spring.mvc.chap05.entity.Board;
 import com.spring.mvc.chap05.repository.BoardMapper;
 import com.spring.mvc.util.LoginUtil;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
@@ -18,7 +17,6 @@ import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class BoardService {
 
 //    private final BoardRepository boardRepository;
@@ -49,7 +47,6 @@ public class BoardService {
     public BoardDetailResponseDTO getDetail(int bno) {
 
         Board board = boardRepository.findOne(bno);
-        log.info("board: {}", board);
         // 조회수 상승 처리
 //        board.setViewCount(board.getViewCount() + 1);
         boardRepository.upViewCount(bno);

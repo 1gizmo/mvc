@@ -17,6 +17,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import java.time.LocalDateTime;
 
 import static com.spring.mvc.chap05.service.LoginResult.*;
@@ -30,8 +31,9 @@ public class MemberService {
     private final PasswordEncoder encoder;
 
     // 회원가입 처리 서비스
-    public boolean join(final SignUpRequestDTO dto,
-                        final String savePath) {
+    public boolean join(
+            final SignUpRequestDTO dto,
+            final String savePath) {
 
         // dto를 entity로 변환
         Member member = Member.builder()
@@ -119,6 +121,7 @@ public class MemberService {
                 .nickName(member.getName())
                 .email(member.getEmail())
                 .auth(member.getAuth().toString())
+                .profile(member.getProfileImage())
                 .build();
         // 그 정보를 세션에 저장
         session.setAttribute(LoginUtil.LOGIN_KEY, dto);
@@ -132,16 +135,17 @@ public class MemberService {
     }
 
     public void autoLoginClear(HttpServletRequest request, HttpServletResponse response) {
-        // 1. 자동로그인 쿠키 해제
+        // 1. 자동로그인 쿠키를 가져온다
         Cookie c = WebUtils.getCookie(request, LoginUtil.AUTO_LOGIN_COOKIE);
+
         // 2. 쿠키를 삭제한다.
         // -> 쿠키의 수명을 0초로 만들어서 다시 클라이언트에게 응답
-        if(c != null){
-        c.setMaxAge(0);
-        c.setPath("/");
-        response.addCookie(c);
+        if (c != null) {
+            c.setMaxAge(0);
+            c.setPath("/");
+            response.addCookie(c);
 
-        // 3. 데이터베이스에도 자동 로그인을 해제한다
+            // 3. 데이터베이스에도 자동로그인을 해제한다.
             memberMapper.saveAutoLogin(
                     AutoLoginDTO.builder()
                             .sessionId("none")
@@ -150,6 +154,5 @@ public class MemberService {
                             .build()
             );
         }
-
     }
 }

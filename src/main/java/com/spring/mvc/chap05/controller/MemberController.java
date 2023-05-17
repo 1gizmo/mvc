@@ -15,13 +15,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import static com.spring.mvc.chap05.service.LoginResult.SUCCESS;
+import static com.spring.mvc.chap05.service.LoginResult.*;
 import static com.spring.mvc.util.LoginUtil.*;
 
 @Controller
@@ -32,6 +33,7 @@ public class MemberController {
 
     @Value("${file.upload.root-path}")
     private String rootPath;
+
     private final MemberService memberService;
 
     // 회원 가입 요청
@@ -47,15 +49,19 @@ public class MemberController {
     public String signUp(SignUpRequestDTO dto) {
         log.info("/members/sign-up POST ! - {}", dto);
 
-        log.info("프로필 사진 이름 : {}", dto.getProfileImage().getOriginalFilename());
-        String savePath = FileUtil.uploadFile(dto.getProfileImage(), rootPath);
+        MultipartFile profileImage = dto.getProfileImage();
+        log.info("프로필사진 이름: {}", profileImage.getOriginalFilename());
+
+        String savePath = null;
+        if (!profileImage.isEmpty()) {
+            // 실제 로컬 스토리지에 파일을 업로드하는 로직
+            savePath = FileUtil.uploadFile(profileImage, rootPath);
+        }
 
         boolean flag = memberService.join(dto, savePath);
 
-//        return "redirect:/board/list";
         return "redirect:/members/sign-in";
     }
-
 
     // 아이디, 이메일 중복검사
     // 비동기 요청 처리
@@ -125,14 +131,17 @@ public class MemberController {
 
     // 로그아웃 요청 처리
     @GetMapping("/sign-out")
-    public String signOut(HttpServletRequest request,
-                          HttpServletResponse response) {
+    public String signOut(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
 
         HttpSession session = request.getSession();
-        // 로그인중인지 확인
+
+        // 로그인 중인지 확인
         if (isLogin(session)) {
 
-            // 자동 로그인 상태라면 해제한다
+            // 자동로그인 상태라면 해제한다.
             if (isAutoLogin(request)) {
                 memberService.autoLoginClear(request, response);
             }
@@ -144,6 +153,8 @@ public class MemberController {
             session.invalidate();
             return "redirect:/";
         }
+
         return "redirect:/members/sign-in";
     }
+
 }

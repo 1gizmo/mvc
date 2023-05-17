@@ -1,11 +1,12 @@
 package com.spring.mvc.chap05.controller;
 
-import com.spring.mvc.chap05.dto.page.PageMaker;
-import com.spring.mvc.chap05.dto.page.Search;
-import com.spring.mvc.chap05.dto.request.BoardWriteRequestDTO;
 import com.spring.mvc.chap05.dto.response.BoardDetailResponseDTO;
 import com.spring.mvc.chap05.dto.response.BoardListResponseDTO;
+import com.spring.mvc.chap05.dto.request.BoardWriteRequestDTO;
+import com.spring.mvc.chap05.dto.page.PageMaker;
+import com.spring.mvc.chap05.dto.page.Search;
 import com.spring.mvc.chap05.service.BoardService;
+import com.spring.mvc.util.LoginUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
@@ -104,7 +107,7 @@ public class BoardController {
     // 글 상세 조회 요청
     @GetMapping("/detail")
     public String detail(int bno, @ModelAttribute("s") Search search, Model model) {
-        log.info("/board/detail : GET - {}", bno);
+        System.out.println("/board/detail : GET");
         BoardDetailResponseDTO detail = boardService.getDetail(bno);
         model.addAttribute("b", detail);
 //        model.addAttribute("s", search);
