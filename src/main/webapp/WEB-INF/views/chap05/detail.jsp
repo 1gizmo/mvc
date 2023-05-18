@@ -24,6 +24,8 @@
 
         .form-container h1 {
             font-size: 40px;
+
+    
             font-weight: 700;
             letter-spacing: 10px;
             text-align: center;
