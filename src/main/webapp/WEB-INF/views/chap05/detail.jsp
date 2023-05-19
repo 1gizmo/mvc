@@ -25,7 +25,7 @@
         .form-container h1 {
             font-size: 40px;
 
-    
+            
             font-weight: 700;
             letter-spacing: 10px;
             text-align: center;
@@ -211,7 +211,7 @@
                             <div class="profile-box">
                                 <c:choose>
                                     <c:when test="${login.profile != null}">
-                                        <img src="/local${login.profile}" alt="프사">
+                                        <img src="{login.profile}" alt="프사">
                                     </c:when>
                                     <c:otherwise>
                                         <img src="/assets/img/anonymous.jpg" alt="프사">

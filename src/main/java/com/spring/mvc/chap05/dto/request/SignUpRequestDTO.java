@@ -1,5 +1,6 @@
 package com.spring.mvc.chap05.dto.request;
 
+import com.spring.mvc.chap05.entity.LoginMethod;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,6 +11,8 @@ import javax.validation.constraints.Size;
 @Setter @Getter
 @ToString @EqualsAndHashCode
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class SignUpRequestDTO {
 
     @NotBlank
@@ -25,4 +28,6 @@ public class SignUpRequestDTO {
     private String email;
 
     private MultipartFile profileImage;
+
+    private LoginMethod loginMethod;
 }
